@@ -8,70 +8,42 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="スラローム">
 <title>カヌースラローム 大会集計</title>
-<link rel="manifest" href="manifest.json">
 <style>
 :root {
-  --blue: #0f4c75;
-  --blue-light: #1b6ca8;
-  --blue-pale: #e8f4fd;
-  --accent: #e8832a;
-  --accent-light: #fdf0e3;
-  --red: #c0392b;
-  --red-light: #fdecea;
-  --yellow: #e67e22;
-  --yellow-light: #fef9e7;
-  --green: #1e8449;
-  --green-light: #eafaf1;
-  --gray-50: #f8f9fa;
-  --gray-100: #f1f3f5;
-  --gray-200: #e9ecef;
-  --gray-300: #dee2e6;
-  --gray-400: #ced4da;
-  --gray-500: #adb5bd;
-  --gray-600: #6c757d;
-  --gray-700: #495057;
-  --gray-800: #343a40;
-  --gray-900: #212529;
-  --radius: 8px;
-  --radius-lg: 12px;
-  --shadow: 0 1px 3px rgba(0,0,0,0.1);
+  --blue: #0f4c75; --blue-light: #1b6ca8; --blue-pale: #e8f4fd;
+  --accent: #e8832a; --accent-light: #fdf0e3;
+  --red: #c0392b; --red-light: #fdecea;
+  --yellow: #e67e22; --yellow-light: #fef9e7;
+  --green: #1e8449; --green-light: #eafaf1;
+  --gray-50: #f8f9fa; --gray-100: #f1f3f5; --gray-200: #e9ecef;
+  --gray-300: #dee2e6; --gray-400: #ced4da; --gray-500: #adb5bd;
+  --gray-600: #6c757d; --gray-700: #495057; --gray-800: #343a40; --gray-900: #212529;
+  --radius: 8px; --radius-lg: 12px; --shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html, body { height: 100%; font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif; background: var(--gray-100); color: var(--gray-900); font-size: 14px; }
-
-/* header */
 .app-header { background: var(--blue); color: white; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
-.app-title { font-size: 16px; font-weight: 700; letter-spacing: 0.5px; }
+.app-title { font-size: 16px; font-weight: 700; }
 .app-event { font-size: 11px; opacity: 0.8; margin-top: 2px; }
-.sync-btn { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 6px 12px; border-radius: 99px; font-size: 12px; cursor: pointer; }
+.header-btns { display: flex; gap: 6px; }
+.sync-btn { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 6px 10px; border-radius: 99px; font-size: 11px; cursor: pointer; white-space: nowrap; }
 .sync-btn:active { background: rgba(255,255,255,0.3); }
-
-/* tabs */
 .tab-bar { background: white; display: flex; border-bottom: 1px solid var(--gray-200); overflow-x: auto; position: sticky; top: 57px; z-index: 99; }
 .tab-bar::-webkit-scrollbar { display: none; }
-.tab-item { flex: 1; min-width: 64px; padding: 10px 4px; text-align: center; font-size: 11px; color: var(--gray-500); cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; }
+.tab-item { flex: 1; min-width: 60px; padding: 10px 4px; text-align: center; font-size: 11px; color: var(--gray-500); cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; }
 .tab-item.active { color: var(--blue); border-bottom-color: var(--blue); font-weight: 700; }
-
-/* sections */
 .section { display: none; padding: 12px; }
 .section.active { display: block; }
-
-/* cards */
 .card { background: white; border-radius: var(--radius-lg); padding: 14px; margin-bottom: 12px; box-shadow: var(--shadow); }
-.card-title { font-size: 13px; font-weight: 700; color: var(--gray-700); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
-
-/* form */
+.card-title { font-size: 13px; font-weight: 700; color: var(--gray-700); margin-bottom: 12px; }
 .form-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
 .form-label { font-size: 12px; color: var(--gray-600); min-width: 80px; }
-input[type=text], input[type=number], select {
+input[type=text], input[type=number], input[type=date], select {
   padding: 8px 10px; border: 1px solid var(--gray-300); border-radius: var(--radius);
-  font-size: 13px; background: white; color: var(--gray-900); font-family: inherit;
-  -webkit-appearance: none; appearance: none;
+  font-size: 13px; background: white; color: var(--gray-900); font-family: inherit; -webkit-appearance: none; appearance: none;
 }
-input[type=text]:focus, input[type=number]:focus, select:focus { outline: none; border-color: var(--blue); }
+input:focus, select:focus { outline: none; border-color: var(--blue); }
 select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236c757d' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; padding-right: 28px; }
-
-/* buttons */
 .btn { padding: 8px 16px; border-radius: var(--radius); font-size: 13px; font-weight: 600; cursor: pointer; border: none; font-family: inherit; transition: opacity 0.15s; }
 .btn:active { opacity: 0.75; }
 .btn-primary { background: var(--blue); color: white; }
@@ -79,14 +51,11 @@ select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.o
 .btn-ghost { background: var(--gray-100); color: var(--gray-700); border: 1px solid var(--gray-300); }
 .btn-danger { background: var(--red-light); color: var(--red); border: 1px solid #f5c6c2; }
 .btn-sm { padding: 5px 10px; font-size: 12px; }
-
-/* run block */
+.btn-success { background: var(--green); color: white; }
 .run-block { background: var(--gray-50); border-radius: var(--radius); padding: 12px; margin-bottom: 10px; border: 1px solid var(--gray-200); }
 .run-label { font-size: 12px; font-weight: 700; color: var(--blue); margin-bottom: 10px; }
 .time-hint { font-size: 11px; color: var(--gray-500); margin-left: 4px; }
 .time-preview { font-size: 12px; color: var(--blue-light); margin-left: 4px; font-weight: 600; }
-
-/* gate grid */
 .gate-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin: 8px 0; }
 .gate-cell { border: 1px solid var(--gray-300); border-radius: 6px; padding: 5px 3px; text-align: center; background: white; }
 .gate-num { font-size: 10px; color: var(--gray-500); margin-bottom: 3px; }
@@ -95,25 +64,18 @@ select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.o
 .gb.sel-0 { background: var(--gray-100); color: var(--gray-700); border-color: var(--gray-400); }
 .gb.sel-2 { background: var(--yellow-light); color: var(--yellow); border-color: #f0ad4e; }
 .gb.sel-50 { background: var(--red-light); color: var(--red); border-color: #e74c3c; }
-
-/* pen summary */
 .pen-box { background: white; border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 8px 12px; margin-top: 8px; }
 .pen-box-label { font-size: 11px; color: var(--gray-500); }
 .pen-box-total { font-size: 18px; font-weight: 700; color: var(--gray-800); margin: 2px 0; }
 .pen-box-detail { font-size: 10px; color: var(--gray-500); line-height: 1.5; }
 .total-time { font-size: 20px; font-weight: 700; color: var(--blue); }
-
-/* athlete list */
 .ath-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--gray-100); }
 .ath-item:last-child { border-bottom: none; }
 .ath-num { font-size: 11px; color: var(--gray-400); width: 28px; }
 .ath-name { font-size: 13px; font-weight: 600; flex: 1; }
-.ath-cat { font-size: 11px; color: var(--gray-500); margin-top: 1px; }
-
-/* table */
 .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius); }
 table { border-collapse: collapse; font-size: 11px; width: 100%; }
-th { background: var(--blue); color: white; padding: 6px 5px; text-align: center; white-space: nowrap; font-weight: 600; font-size: 10px; position: sticky; top: 0; }
+th { background: var(--blue); color: white; padding: 6px 5px; text-align: center; white-space: nowrap; font-weight: 600; font-size: 10px; }
 th.left { text-align: left; }
 td { padding: 6px 5px; border-bottom: 1px solid var(--gray-100); text-align: center; vertical-align: middle; }
 td.left { text-align: left; font-weight: 600; font-size: 11px; }
@@ -122,31 +84,20 @@ tr:nth-child(even) td { background: var(--gray-50); }
 .td-pen { background: var(--yellow-light) !important; color: var(--yellow); font-weight: 700; }
 .td-best { background: var(--green-light) !important; color: var(--green); font-weight: 700; }
 .star-mark { color: var(--accent); font-weight: 900; }
-
-/* results */
 .cat-block { margin-bottom: 20px; }
 .cat-title { font-size: 13px; font-weight: 700; color: white; background: var(--blue-light); padding: 8px 12px; border-radius: var(--radius) var(--radius) 0 0; }
-.medal { font-size: 14px; }
-
-/* badges */
 .badge { display: inline-block; font-size: 10px; padding: 2px 6px; border-radius: 99px; font-weight: 600; }
 .badge-mg { background: var(--red-light); color: var(--red); }
 .badge-pen { background: var(--yellow-light); color: var(--yellow); }
 .badge-best { background: var(--green-light); color: var(--green); }
 .badge-clean { background: var(--gray-100); color: var(--gray-500); }
-
-/* seg */
 .seg-row { display: flex; gap: 6px; margin-bottom: 10px; }
 .seg { flex: 1; padding: 8px; text-align: center; border: 1px solid var(--gray-300); border-radius: var(--radius); font-size: 12px; font-weight: 600; cursor: pointer; background: white; color: var(--gray-600); font-family: inherit; }
 .seg.active { background: var(--blue); color: white; border-color: var(--blue); }
-
-/* modal */
 .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
 .modal-bg.open { display: flex; }
-.modal { background: white; border-radius: var(--radius-lg); padding: 20px; width: 100%; max-width: 400px; }
+.modal { background: white; border-radius: var(--radius-lg); padding: 20px; width: 100%; max-width: 420px; max-height: 80vh; overflow-y: auto; }
 .modal-title { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
-
-/* misc */
 .empty { color: var(--gray-400); text-align: center; padding: 2rem; font-size: 13px; }
 .msg-ok { font-size: 12px; color: var(--green); font-weight: 600; }
 .msg-err { font-size: 12px; color: var(--red); font-weight: 600; }
@@ -156,6 +107,11 @@ tr:nth-child(even) td { background: var(--gray-50); }
 .metric { background: white; border-radius: var(--radius); padding: 10px; text-align: center; box-shadow: var(--shadow); }
 .metric-val { font-size: 20px; font-weight: 700; color: var(--blue); }
 .metric-lbl { font-size: 10px; color: var(--gray-500); margin-top: 2px; }
+.event-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; border: 1px solid var(--gray-200); border-radius: var(--radius); margin-bottom: 8px; cursor: pointer; background: white; }
+.event-item:hover { border-color: var(--blue); background: var(--blue-pale); }
+.event-item-name { font-size: 13px; font-weight: 700; color: var(--gray-800); }
+.event-item-date { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
+.loading { text-align: center; padding: 2rem; color: var(--gray-500); font-size: 13px; }
 </style>
 </head>
 <body>
@@ -165,7 +121,10 @@ tr:nth-child(even) td { background: var(--gray-50); }
     <div class="app-title">🛶 カヌースラローム</div>
     <div class="app-event" id="event-label">大会未設定</div>
   </div>
-  <button class="sync-btn" onclick="openSyncModal()">スプレッドシートへ保存</button>
+  <div class="header-btns">
+    <button class="sync-btn" onclick="openLoadModal()">📂 読み込み</button>
+    <button class="sync-btn" onclick="openSyncModal()">💾 保存</button>
+  </div>
 </div>
 
 <div class="tab-bar">
@@ -211,9 +170,11 @@ tr:nth-child(even) td { background: var(--gray-50); }
       <span class="form-label">GAS URL</span>
       <input type="text" id="gas-url" placeholder="https://script.google.com/..." style="flex:1;min-width:180px;font-size:11px" />
     </div>
-    <div class="hint" style="margin-top:4px">Google Apps ScriptのウェブアプリURLを入力してください。設定方法は下記の手順書を参照。</div>
-    <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="testGAS()">接続テスト</button>
-    <span id="gas-msg" style="margin-left:8px"></span>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-ghost btn-sm" onclick="saveGasUrl()">URLを保存</button>
+      <button class="btn btn-ghost btn-sm" onclick="testGAS()">接続テスト</button>
+    </div>
+    <span id="gas-msg" style="display:block;margin-top:6px"></span>
   </div>
 </div>
 
@@ -320,11 +281,11 @@ tr:nth-child(even) td { background: var(--gray-50); }
   <div id="final-table"><div class="empty">データがありません</div></div>
 </div>
 
-<!-- Sync Modal -->
+<!-- 保存モーダル -->
 <div class="modal-bg" id="sync-modal">
   <div class="modal">
-    <div class="modal-title">📤 スプレッドシートへ保存</div>
-    <div class="hint" style="margin-bottom:12px">大会のデータをGoogleスプレッドシートに書き出します。</div>
+    <div class="modal-title">💾 スプレッドシートへ保存</div>
+    <div class="hint" style="margin-bottom:12px">大会のデータをGoogleスプレッドシートに書き出します。同じシート名で保存すると上書きされます。</div>
     <div class="form-row">
       <span class="form-label">シート名</span>
       <input type="text" id="sheet-name" placeholder="例: 2025-06-15大会" style="flex:1" />
@@ -337,14 +298,39 @@ tr:nth-child(even) td { background: var(--gray-50); }
   </div>
 </div>
 
-<script>
-let gateCount = 20;
-let gateVals = {1:{}, 2:{}};
-let athletes = [];
-let times = {};
-let currentRunSeg = 1;
+<!-- 読み込みモーダル -->
+<div class="modal-bg" id="load-modal">
+  <div class="modal">
+    <div class="modal-title">📂 過去の大会を読み込む</div>
+    <div class="hint" style="margin-bottom:12px">スプレッドシートに保存された大会の一覧を表示します。</div>
+    <button class="btn btn-primary btn-sm" onclick="fetchSheetList()" style="margin-bottom:12px">一覧を取得</button>
+    <div id="sheet-list"><div class="hint">「一覧を取得」を押してください</div></div>
+    <div style="margin-top:12px">
+      <button class="btn btn-ghost" onclick="closeLoadModal()">閉じる</button>
+    </div>
+    <div id="load-msg" style="margin-top:8px"></div>
+  </div>
+</div>
 
-// ---- 設定 ----
+<script>
+let gateCount = 20, currentRunSeg = 1;
+let gateVals = {1:{}, 2:{}};
+let athletes = [], times = {};
+
+// GAS URLをlocalStorageに保存（設定値のみ、大会データは除く）
+function saveGasUrl() {
+  const url = document.getElementById('gas-url').value.trim();
+  if (url) localStorage.setItem('gasUrl', url);
+  const msg = document.getElementById('gas-msg');
+  msg.className = 'msg-ok'; msg.textContent = 'URLを保存しました';
+  setTimeout(() => { msg.textContent = ''; }, 2000);
+}
+
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem('gasUrl');
+  if (saved) document.getElementById('gas-url').value = saved;
+});
+
 function applySettings() {
   const name = document.getElementById('event-name').value.trim();
   const date = document.getElementById('event-date').value;
@@ -354,13 +340,9 @@ function applySettings() {
   const msg = document.getElementById('settings-msg');
   msg.className = 'msg-ok'; msg.textContent = '保存しました';
   setTimeout(() => { msg.textContent = ''; }, 2000);
-  // シート名初期値セット
-  if (name || date) {
-    document.getElementById('sheet-name').value = [date, name].filter(Boolean).join(' ');
-  }
+  if (name || date) document.getElementById('sheet-name').value = [date, name].filter(Boolean).join(' ');
 }
 
-// ---- タブ ----
 function showTab(t) {
   const tabs = ['settings','athletes','input','start-result','final-result'];
   tabs.forEach((s, i) => {
@@ -373,7 +355,6 @@ function showTab(t) {
   if (t === 'final-result') renderFinal();
 }
 
-// ---- ゲートグリッド ----
 function buildGateGrids() {
   for (const run of [1, 2]) {
     const el = document.getElementById('r' + run + '-gates');
@@ -400,89 +381,75 @@ function setGate(run, gate, val) {
   const cell = document.getElementById('gc-' + run + '-' + gate);
   cell.querySelectorAll('.gb').forEach(b => {
     b.className = 'gb';
-    if (parseInt(b.textContent) === val) b.classList.add(val === 0 ? 'sel-0' : val === 2 ? 'sel-2' : 'sel-50');
+    if (parseInt(b.textContent) === val) b.classList.add(val===0?'sel-0':val===2?'sel-2':'sel-50');
   });
-  updatePenSummary(run);
-  previewNet(run);
+  updatePenSummary(run); previewNet(run);
 }
 
-function getPenTotal(run) {
-  return Object.values(gateVals[run] || {}).reduce((s, v) => s + v, 0);
-}
+function getPenTotal(run) { return Object.values(gateVals[run]||{}).reduce((s,v)=>s+v,0); }
 
 function updatePenSummary(run) {
-  const vals = gateVals[run] || {};
-  const total = Object.values(vals).reduce((s, v) => s + v, 0);
-  document.getElementById('r' + run + '-pen-total').textContent = total + '秒';
-  const g2 = Object.entries(vals).filter(([,v]) => v === 2).map(([k]) => 'G' + k);
-  const g50 = Object.entries(vals).filter(([,v]) => v === 50).map(([k]) => 'G' + k);
+  const vals = gateVals[run]||{};
+  const total = Object.values(vals).reduce((s,v)=>s+v,0);
+  document.getElementById('r'+run+'-pen-total').textContent = total+'秒';
+  const g2 = Object.entries(vals).filter(([,v])=>v===2).map(([k])=>'G'+k);
+  const g50 = Object.entries(vals).filter(([,v])=>v===50).map(([k])=>'G'+k);
   const parts = [];
-  if (g2.length) parts.push('接触: ' + g2.join(', '));
-  if (g50.length) parts.push('MG: ' + g50.join(', '));
-  document.getElementById('r' + run + '-pen-detail').textContent = parts.join(' / ') || 'クリーン';
+  if (g2.length) parts.push('接触: '+g2.join(', '));
+  if (g50.length) parts.push('MG: '+g50.join(', '));
+  document.getElementById('r'+run+'-pen-detail').textContent = parts.join(' / ')||'クリーン';
 }
 
-// ---- タイム ----
 function parseTime(s) {
-  if (!s || !s.trim()) return null;
+  if (!s||!s.trim()) return null;
   const m = s.trim().match(/^(\d+):(\d{1,2})\.(\d{1,2})$/);
   if (!m) return null;
-  return parseInt(m[1]) * 60 + parseInt(m[2]) + parseInt(m[3].padEnd(2, '0')) / 100;
+  return parseInt(m[1])*60+parseInt(m[2])+parseInt(m[3].padEnd(2,'0'))/100;
 }
 
 function fmtSec(s) {
-  if (s == null || isNaN(s)) return '—';
-  const m = Math.floor(s / 60), sec = (s % 60).toFixed(2).padStart(5, '0');
-  return m > 0 ? `${m}:${sec}` : sec + 's';
+  if (s==null||isNaN(s)) return '—';
+  const m = Math.floor(s/60), sec = (s%60).toFixed(2).padStart(5,'0');
+  return m>0?`${m}:${sec}`:sec+'s';
 }
 
 function previewNet(run) {
-  const s = parseTime(document.getElementById('r' + run + '-start').value);
-  const g = parseTime(document.getElementById('r' + run + '-goal').value);
+  const s = parseTime(document.getElementById('r'+run+'-start').value);
+  const g = parseTime(document.getElementById('r'+run+'-goal').value);
   const pen = getPenTotal(run);
-  const netEl = document.getElementById('r' + run + '-net');
-  const totEl = document.getElementById('r' + run + '-total');
-  if (s !== null && g !== null && g > s) {
-    netEl.textContent = '（差分: ' + fmtSec(g - s) + '）';
-    totEl.textContent = fmtSec(g - s + pen);
-    totEl.style.color = 'var(--blue)';
-  } else if (s !== null && g !== null) {
-    netEl.textContent = '';
-    totEl.textContent = 'ゴール > スタートにしてください';
-    totEl.style.color = 'var(--red)';
-  } else {
-    netEl.textContent = ''; totEl.textContent = '—';
-    totEl.style.color = 'var(--blue)';
-  }
+  const netEl = document.getElementById('r'+run+'-net'), totEl = document.getElementById('r'+run+'-total');
+  if (s!==null&&g!==null&&g>s) {
+    netEl.textContent = '（差分: '+fmtSec(g-s)+'）';
+    totEl.textContent = fmtSec(g-s+pen); totEl.style.color = 'var(--blue)';
+  } else if (s!==null&&g!==null) {
+    netEl.textContent=''; totEl.textContent='ゴール > スタートにしてください'; totEl.style.color='var(--red)';
+  } else { netEl.textContent=''; totEl.textContent='—'; totEl.style.color='var(--blue)'; }
 }
 
-// ---- 選手 ----
 function addAthlete() {
   const name = document.getElementById('ath-name').value.trim();
   const cat = document.getElementById('ath-cat').value;
   if (!name) return;
-  const maxOrder = athletes.reduce((m, a) => Math.max(m, a.startOrder || 0), 0);
-  athletes.push({ id: Date.now(), name, cat, startOrder: maxOrder + 1 });
+  const maxOrder = athletes.reduce((m,a)=>Math.max(m,a.startOrder||0),0);
+  athletes.push({id:Date.now(),name,cat,startOrder:maxOrder+1});
   document.getElementById('ath-name').value = '';
   renderAthList();
 }
 
 function removeAthlete(id) {
-  athletes = athletes.filter(a => a.id !== id);
-  delete times[id];
-  renderAthList();
+  athletes = athletes.filter(a=>a.id!==id); delete times[id]; renderAthList();
 }
 
 function renderAthList() {
   const el = document.getElementById('ath-list');
-  if (!athletes.length) { el.innerHTML = '<div class="empty">選手を登録してください</div>'; return; }
+  if (!athletes.length) { el.innerHTML='<div class="empty">選手を登録してください</div>'; return; }
   const cats = ['K1男子','K1女子','C1男子','C1女子','C2'];
   let html = '';
   cats.forEach(cat => {
-    const list = athletes.filter(a => a.cat === cat);
+    const list = athletes.filter(a=>a.cat===cat);
     if (!list.length) return;
     html += `<div style="font-size:12px;font-weight:700;color:var(--blue);margin:10px 0 4px">${cat}（${list.length}名）</div>`;
-    html += list.map(a => `<div class="ath-item">
+    html += list.map(a=>`<div class="ath-item">
       <div class="ath-num">${a.startOrder}</div>
       <div style="flex:1"><div class="ath-name">${a.name}</div></div>
       <button class="btn btn-danger btn-sm" onclick="removeAthlete(${a.id})">削除</button>
@@ -494,231 +461,260 @@ function renderAthList() {
 function updateSel() {
   const sel = document.getElementById('sel-ath');
   const cur = sel.value;
-  const sorted = [...athletes].sort((a, b) => a.startOrder - b.startOrder);
-  sel.innerHTML = '<option value="">選択してください</option>' +
-    sorted.map(a => `<option value="${a.id}">${a.startOrder}番 ${a.name}（${a.cat}）</option>`).join('');
+  const sorted = [...athletes].sort((a,b)=>a.startOrder-b.startOrder);
+  sel.innerHTML = '<option value="">選択してください</option>'+
+    sorted.map(a=>`<option value="${a.id}">${a.startOrder}番 ${a.name}（${a.cat}）</option>`).join('');
   if (cur) sel.value = cur;
 }
 
 function loadExisting() {
   const id = parseInt(document.getElementById('sel-ath').value);
   const d = times[id];
-  for (const run of [1, 2]) {
-    const r = d?.[run] || {};
-    document.getElementById('r' + run + '-start').value = r.startRaw || '';
-    document.getElementById('r' + run + '-goal').value = r.goalRaw || '';
-    gateVals[run] = r.gates ? {...r.gates} : {};
-    buildGateGrids();
-    previewNet(run);
+  for (const run of [1,2]) {
+    const r = d?.[run]||{};
+    document.getElementById('r'+run+'-start').value = r.startRaw||'';
+    document.getElementById('r'+run+'-goal').value = r.goalRaw||'';
+    gateVals[run] = r.gates?{...r.gates}:{};
+    buildGateGrids(); previewNet(run);
   }
 }
 
 function saveTime() {
   const id = parseInt(document.getElementById('sel-ath').value);
   const msg = document.getElementById('save-msg');
-  if (!id) { msg.className = 'msg-err'; msg.textContent = '選手を選択してください'; return; }
+  if (!id) { msg.className='msg-err'; msg.textContent='選手を選択してください'; return; }
   const runs = {}; let hasAny = false;
-  for (const run of [1, 2]) {
-    const sr = document.getElementById('r' + run + '-start').value.trim();
-    const gr = document.getElementById('r' + run + '-goal').value.trim();
-    if (!sr && !gr) continue;
+  for (const run of [1,2]) {
+    const sr = document.getElementById('r'+run+'-start').value.trim();
+    const gr = document.getElementById('r'+run+'-goal').value.trim();
+    if (!sr&&!gr) continue;
     const s = parseTime(sr), g = parseTime(gr);
-    if (s === null || g === null || g <= s) {
-      msg.className = 'msg-err'; msg.textContent = `第${run}ランのタイム形式を確認してください（分:秒.ミリ秒）`; return;
-    }
+    if (s===null||g===null||g<=s) { msg.className='msg-err'; msg.textContent=`第${run}ランのタイム形式を確認してください`; return; }
     const pen = getPenTotal(run);
-    runs[run] = { startRaw: sr, goalRaw: gr, net: g - s, pen, gates: {...gateVals[run]}, total: g - s + pen };
+    runs[run] = {startRaw:sr,goalRaw:gr,net:g-s,pen,gates:{...gateVals[run]},total:g-s+pen};
     hasAny = true;
   }
-  if (!hasAny) { msg.className = 'msg-err'; msg.textContent = '少なくとも1ランを入力してください'; return; }
+  if (!hasAny) { msg.className='msg-err'; msg.textContent='少なくとも1ランを入力してください'; return; }
   times[id] = runs;
-  msg.className = 'msg-ok'; msg.textContent = '保存しました';
-  setTimeout(() => { msg.textContent = ''; }, 2500);
+  msg.className='msg-ok'; msg.textContent='保存しました';
+  setTimeout(()=>{ msg.textContent=''; },2500);
 }
 
-// ---- スタート順 ----
 function setRunSeg(r) {
   currentRunSeg = r;
-  document.getElementById('seg-r1').classList.toggle('active', r === 1);
-  document.getElementById('seg-r2').classList.toggle('active', r === 2);
+  document.getElementById('seg-r1').classList.toggle('active',r===1);
+  document.getElementById('seg-r2').classList.toggle('active',r===2);
   renderStartResult();
 }
 
 function renderStartResult() {
   const wrap = document.getElementById('start-table');
-  const sorted = [...athletes].sort((a, b) => a.startOrder - b.startOrder);
-  const gNums = Array.from({length: gateCount}, (_, i) => i + 1);
-
-  if (currentRunSeg === 1) {
+  const sorted = [...athletes].sort((a,b)=>a.startOrder-b.startOrder);
+  const gNums = Array.from({length:gateCount},(_,i)=>i+1);
+  if (currentRunSeg===1) {
     let th = `<tr><th>発艇</th><th class="left">名前</th>`;
-    gNums.forEach(g => { th += `<th>G${g}</th>`; });
+    gNums.forEach(g=>{th+=`<th>G${g}</th>`;});
     th += `<th>ペナ合計</th><th>タイム</th><th>ポイント</th></tr>`;
     let tb = '';
-    sorted.forEach(a => {
+    sorted.forEach(a=>{
       const r = times[a.id]?.[1];
       let tr = `<td>${a.startOrder}</td><td class="left">${a.name}</td>`;
       if (r) {
-        gNums.forEach(g => {
-          const v = r.gates?.[g] || 0;
-          if (v === 50) tr += `<td class="td-mg">50</td>`;
-          else if (v === 2) tr += `<td class="td-pen">2</td>`;
-          else tr += `<td style="color:var(--gray-300)">-</td>`;
+        gNums.forEach(g=>{
+          const v=r.gates?.[g]||0;
+          if(v===50) tr+=`<td class="td-mg">50</td>`;
+          else if(v===2) tr+=`<td class="td-pen">2</td>`;
+          else tr+=`<td style="color:var(--gray-300)">-</td>`;
         });
-        tr += `<td style="font-weight:700">${r.pen}秒</td><td style="font-weight:700">${fmtSec(r.total)}</td><td style="font-weight:700">${r.total.toFixed(2)}pt</td>`;
+        tr+=`<td style="font-weight:700">${r.pen}秒</td><td style="font-weight:700">${fmtSec(r.total)}</td><td style="font-weight:700">${r.total.toFixed(2)}pt</td>`;
       } else {
-        gNums.forEach(() => { tr += `<td style="color:var(--gray-300)">-</td>`; });
-        tr += `<td>—</td><td>—</td><td>—</td>`;
+        gNums.forEach(()=>{tr+=`<td style="color:var(--gray-300)">-</td>`;});
+        tr+=`<td>—</td><td>—</td><td>—</td>`;
       }
-      tb += `<tr>${tr}</tr>`;
+      tb+=`<tr>${tr}</tr>`;
     });
-    wrap.innerHTML = `<table><thead>${th}</thead><tbody>${tb}</tbody></table>`;
+    wrap.innerHTML=`<table><thead>${th}</thead><tbody>${tb}</tbody></table>`;
   } else {
-    let th = `<tr><th rowspan="2">発艇</th><th class="left" rowspan="2">名前</th><th rowspan="2">ラン</th>`;
-    gNums.forEach(g => { th += `<th>G${g}</th>`; });
-    th += `<th>ペナ合計</th><th>タイム</th><th>ポイント</th></tr>`;
-    let tb = '';
-    sorted.forEach(a => {
-      const r1 = times[a.id]?.[1], r2 = times[a.id]?.[2];
-      const best = r1 && r2 ? (r1.total <= r2.total ? 1 : 2) : r1 ? 1 : r2 ? 2 : null;
-      [1, 2].forEach(run => {
-        const r = run === 1 ? r1 : r2;
-        const isBest = best === run;
-        let tr = '';
-        if (run === 1) tr += `<td rowspan="2">${a.startOrder}</td><td class="left" rowspan="2">${a.name}</td>`;
-        tr += `<td style="font-weight:700${isBest ? ';color:var(--green)' : ''}">第${run}ラン${isBest ? '<span class="star-mark">＊</span>' : ''}</td>`;
-        if (r) {
-          gNums.forEach(g => {
-            const v = r.gates?.[g] || 0;
-            if (v === 50) tr += `<td class="td-mg">50</td>`;
-            else if (v === 2) tr += `<td class="td-pen">2</td>`;
-            else tr += `<td style="color:var(--gray-300)">-</td>`;
+    let th=`<tr><th rowspan="2">発艇</th><th class="left" rowspan="2">名前</th><th rowspan="2">ラン</th>`;
+    gNums.forEach(g=>{th+=`<th>G${g}</th>`;});
+    th+=`<th>ペナ合計</th><th>タイム</th><th>ポイント</th></tr>`;
+    let tb='';
+    sorted.forEach(a=>{
+      const r1=times[a.id]?.[1],r2=times[a.id]?.[2];
+      const best=r1&&r2?(r1.total<=r2.total?1:2):r1?1:r2?2:null;
+      [1,2].forEach(run=>{
+        const r=run===1?r1:r2;
+        const isBest=best===run;
+        let tr='';
+        if(run===1) tr+=`<td rowspan="2">${a.startOrder}</td><td class="left" rowspan="2">${a.name}</td>`;
+        tr+=`<td style="font-weight:700${isBest?';color:var(--green)':''}">第${run}ラン${isBest?'<span class="star-mark">＊</span>':''}</td>`;
+        if(r){
+          gNums.forEach(g=>{
+            const v=r.gates?.[g]||0;
+            if(v===50) tr+=`<td class="td-mg">50</td>`;
+            else if(v===2) tr+=`<td class="td-pen">2</td>`;
+            else tr+=`<td style="color:var(--gray-300)">-</td>`;
           });
-          const s = isBest ? 'class="td-best"' : '';
-          tr += `<td ${s} style="font-weight:700">${r.pen}秒</td><td ${s} style="font-weight:700">${fmtSec(r.total)}</td><td ${s} style="font-weight:700">${r.total.toFixed(2)}pt</td>`;
+          const s=isBest?'class="td-best"':'';
+          tr+=`<td ${s} style="font-weight:700">${r.pen}秒</td><td ${s} style="font-weight:700">${fmtSec(r.total)}</td><td ${s} style="font-weight:700">${r.total.toFixed(2)}pt</td>`;
         } else {
-          gNums.forEach(() => { tr += `<td>—</td>`; });
-          tr += `<td>—</td><td>—</td><td>—</td>`;
+          gNums.forEach(()=>{tr+=`<td>—</td>`;});
+          tr+=`<td>—</td><td>—</td><td>—</td>`;
         }
-        tb += `<tr>${tr}</tr>`;
+        tb+=`<tr>${tr}</tr>`;
       });
     });
-    wrap.innerHTML = `<table><thead>${th}</thead><tbody>${tb}</tbody></table>`;
+    wrap.innerHTML=`<table><thead>${th}</thead><tbody>${tb}</tbody></table>`;
   }
 }
 
-// ---- 成績表 ----
 function renderFinal() {
-  const cats = ['K1男子','K1女子','C1男子','C1女子','C2'];
-  const allData = athletes.map(a => {
-    const r1 = times[a.id]?.[1] || null, r2 = times[a.id]?.[2] || null;
-    const best = Math.min(r1 ? r1.total : Infinity, r2 ? r2.total : Infinity);
-    return {...a, r1, r2, best: isFinite(best) ? best : null};
+  const cats=['K1男子','K1女子','C1男子','C1女子','C2'];
+  const allData=athletes.map(a=>{
+    const r1=times[a.id]?.[1]||null,r2=times[a.id]?.[2]||null;
+    const best=Math.min(r1?r1.total:Infinity,r2?r2.total:Infinity);
+    return{...a,r1,r2,best:isFinite(best)?best:null};
   });
-  const rec = allData.filter(a => a.best !== null).length;
-  const allBest = allData.filter(a => a.best).map(a => a.best);
-  document.getElementById('m-total').textContent = athletes.length;
-  document.getElementById('m-rec').textContent = rec;
-  document.getElementById('m-best').textContent = allBest.length ? fmtSec(Math.min(...allBest)) : '—';
-
-  const medal = ['🥇','🥈','🥉'];
-  let html = '';
-  cats.forEach(cat => {
-    const data = allData.filter(a => a.cat === cat && a.best !== null).sort((a, b) => a.best - b.best);
-    if (!data.length) return;
-    html += `<div class="cat-block"><div class="cat-title">${cat}</div>
+  const rec=allData.filter(a=>a.best!==null).length;
+  const allBest=allData.filter(a=>a.best).map(a=>a.best);
+  document.getElementById('m-total').textContent=athletes.length;
+  document.getElementById('m-rec').textContent=rec;
+  document.getElementById('m-best').textContent=allBest.length?fmtSec(Math.min(...allBest)):'—';
+  const medal=['🥇','🥈','🥉'];
+  let html='';
+  cats.forEach(cat=>{
+    const data=allData.filter(a=>a.cat===cat&&a.best!==null).sort((a,b)=>a.best-b.best);
+    if(!data.length) return;
+    html+=`<div class="cat-block"><div class="cat-title">${cat}</div>
       <div class="tbl-wrap"><table>
         <thead><tr><th>順位</th><th class="left">名前</th><th>ペナ合計</th><th>タイム</th><th>ポイント</th></tr></thead>
         <tbody>`;
-    data.forEach((a, i) => {
-      const bestRun = a.r1 && a.r2 ? (a.r1.total <= a.r2.total ? a.r1 : a.r2) : a.r1 || a.r2;
-      const pen = bestRun ? bestRun.pen : 0;
-      html += `<tr>
-        <td><span class="medal">${medal[i] || i + 1}</span></td>
+    data.forEach((a,i)=>{
+      const bestRun=a.r1&&a.r2?(a.r1.total<=a.r2.total?a.r1:a.r2):a.r1||a.r2;
+      const pen=bestRun?bestRun.pen:0;
+      html+=`<tr>
+        <td>${medal[i]||i+1}</td>
         <td class="left">${a.name}</td>
-        <td>${pen > 0 ? `<span class="badge ${pen >= 50 ? 'badge-mg' : 'badge-pen'}">${pen}秒</span>` : '<span class="badge badge-clean">0秒</span>'}</td>
+        <td>${pen>0?`<span class="badge ${pen>=50?'badge-mg':'badge-pen'}">${pen}秒</span>`:'<span class="badge badge-clean">0秒</span>'}</td>
         <td style="font-weight:700">${fmtSec(a.best)}</td>
         <td style="font-weight:700">${a.best.toFixed(2)}pt</td>
       </tr>`;
     });
-    html += `</tbody></table></div></div>`;
+    html+=`</tbody></table></div></div>`;
   });
-  document.getElementById('final-table').innerHTML = html || '<div class="empty">データがありません</div>';
+  document.getElementById('final-table').innerHTML=html||'<div class="empty">データがありません</div>';
 }
 
-// ---- GAS連携 ----
-function openSyncModal() {
-  document.getElementById('sync-modal').classList.add('open');
-  document.getElementById('sync-msg').textContent = '';
-}
-function closeSyncModal() {
-  document.getElementById('sync-modal').classList.remove('open');
-}
-
-async function testGAS() {
-  const url = document.getElementById('gas-url').value.trim();
-  const msg = document.getElementById('gas-msg');
-  if (!url) { msg.className = 'msg-err'; msg.textContent = 'URLを入力してください'; return; }
-  msg.className = ''; msg.textContent = '接続中...';
-  try {
-    const res = await fetch(url + '?action=test');
-    const data = await res.json();
-    if (data.status === 'ok') {
-      msg.className = 'msg-ok'; msg.textContent = '接続成功！';
-    } else {
-      msg.className = 'msg-err'; msg.textContent = 'エラー: ' + (data.message || '不明');
-    }
-  } catch (e) {
-    msg.className = 'msg-err'; msg.textContent = '接続できませんでした';
-  }
-}
+// ---- 保存 ----
+function openSyncModal() { document.getElementById('sync-modal').classList.add('open'); document.getElementById('sync-msg').textContent=''; }
+function closeSyncModal() { document.getElementById('sync-modal').classList.remove('open'); }
 
 async function syncToSheet() {
   const url = document.getElementById('gas-url').value.trim();
   const sheetName = document.getElementById('sheet-name').value.trim();
   const msg = document.getElementById('sync-msg');
-  if (!url) { msg.className = 'msg-err'; msg.textContent = '設定タブでGAS URLを入力してください'; return; }
-  if (!sheetName) { msg.className = 'msg-err'; msg.textContent = 'シート名を入力してください'; return; }
-
-  msg.className = ''; msg.textContent = '保存中...';
-
-  // データ構築
+  if (!url) { msg.className='msg-err'; msg.textContent='設定タブでGAS URLを入力してください'; return; }
+  if (!sheetName) { msg.className='msg-err'; msg.textContent='シート名を入力してください'; return; }
+  msg.className=''; msg.textContent='保存中...';
   const eventName = document.getElementById('event-name').value.trim();
   const eventDate = document.getElementById('event-date').value;
-  const gNums = Array.from({length: gateCount}, (_, i) => i + 1);
-
-  const rows = [];
-  const sorted = [...athletes].sort((a, b) => a.startOrder - b.startOrder);
-  sorted.forEach(a => {
-    [1, 2].forEach(run => {
-      const r = times[a.id]?.[run];
-      const row = {
-        発艇順: a.startOrder, 名前: a.name, カテゴリ: a.cat, ラン: run,
-        スタート: r ? r.startRaw : '', ゴール: r ? r.goalRaw : '',
-        差分: r ? fmtSec(r.net) : '', ペナルティ合計: r ? r.pen : '',
-        タイム: r ? fmtSec(r.total) : '', ポイント: r ? r.total.toFixed(2) : ''
-      };
-      gNums.forEach(g => { row['G' + g] = r ? (r.gates?.[g] || 0) : ''; });
+  const gNums = Array.from({length:gateCount},(_,i)=>i+1);
+  const rows=[];
+  const sorted=[...athletes].sort((a,b)=>a.startOrder-b.startOrder);
+  sorted.forEach(a=>{
+    [1,2].forEach(run=>{
+      const r=times[a.id]?.[run];
+      const row={発艇順:a.startOrder,名前:a.name,カテゴリ:a.cat,ラン:run,
+        スタート:r?r.startRaw:'',ゴール:r?r.goalRaw:'',
+        差分:r?fmtSec(r.net):'',ペナルティ合計:r?r.pen:'',
+        タイム:r?fmtSec(r.total):'',ポイント:r?r.total.toFixed(2):''};
+      gNums.forEach(g=>{row['G'+g]=r?(r.gates?.[g]||0):'';});
       rows.push(row);
     });
   });
-
-  const payload = { sheetName, eventName, eventDate, gateCount, rows };
-
+  // 選手・タイムデータも一緒に保存（読み込み用）
+  const appData = {
+    eventName, eventDate, gateCount,
+    athletes: athletes,
+    times: times
+  };
+  const payload={sheetName,eventName,eventDate,gateCount,rows,appData:JSON.stringify(appData)};
   try {
-    const res = await fetch(url, {
-      method: 'POST',
-      body: JSON.stringify(payload),
-      headers: { 'Content-Type': 'text/plain' }
-    });
+    const res = await fetch(url,{method:'POST',body:JSON.stringify(payload),headers:{'Content-Type':'text/plain'}});
     const data = await res.json();
-    if (data.status === 'ok') {
-      msg.className = 'msg-ok'; msg.textContent = '✓ スプレッドシートに保存しました！';
-    } else {
-      msg.className = 'msg-err'; msg.textContent = 'エラー: ' + (data.message || '不明');
-    }
-  } catch (e) {
-    msg.className = 'msg-err'; msg.textContent = '通信エラーが発生しました';
-  }
+    if (data.status==='ok') { msg.className='msg-ok'; msg.textContent='✓ スプレッドシートに保存しました！'; }
+    else { msg.className='msg-err'; msg.textContent='エラー: '+(data.message||'不明'); }
+  } catch(e) { msg.className='msg-err'; msg.textContent='通信エラーが発生しました'; }
+}
+
+// ---- 読み込み ----
+function openLoadModal() {
+  document.getElementById('load-modal').classList.add('open');
+  document.getElementById('load-msg').textContent='';
+  document.getElementById('sheet-list').innerHTML='<div class="hint">「一覧を取得」を押してください</div>';
+}
+function closeLoadModal() { document.getElementById('load-modal').classList.remove('open'); }
+
+async function fetchSheetList() {
+  const url = document.getElementById('gas-url').value.trim();
+  const msg = document.getElementById('load-msg');
+  const list = document.getElementById('sheet-list');
+  if (!url) { msg.className='msg-err'; msg.textContent='設定タブでGAS URLを入力してください'; return; }
+  list.innerHTML='<div class="loading">読み込み中...</div>';
+  try {
+    const res = await fetch(url+'?action=list');
+    const data = await res.json();
+    if (data.status==='ok'&&data.sheets) {
+      if (!data.sheets.length) { list.innerHTML='<div class="hint">保存された大会データがありません</div>'; return; }
+      list.innerHTML = data.sheets.map(s=>`
+        <div class="event-item" onclick="loadSheet('${s.name}')">
+          <div>
+            <div class="event-item-name">${s.name}</div>
+            <div class="event-item-date">${s.eventDate||''} ${s.eventName||''}</div>
+          </div>
+          <span style="color:var(--blue);font-size:18px">›</span>
+        </div>`).join('');
+    } else { list.innerHTML='<div class="hint">取得できませんでした</div>'; }
+  } catch(e) { list.innerHTML='<div class="hint">通信エラーが発生しました</div>'; }
+}
+
+async function loadSheet(sheetName) {
+  const url = document.getElementById('gas-url').value.trim();
+  const msg = document.getElementById('load-msg');
+  msg.className=''; msg.textContent='読み込み中...';
+  try {
+    const res = await fetch(`${url}?action=load&sheet=${encodeURIComponent(sheetName)}`);
+    const data = await res.json();
+    if (data.status==='ok'&&data.appData) {
+      const app = JSON.parse(data.appData);
+      // データを復元
+      athletes = app.athletes||[];
+      times = app.times||{};
+      gateCount = app.gateCount||20;
+      document.getElementById('event-name').value = app.eventName||'';
+      document.getElementById('event-date').value = app.eventDate||'';
+      document.getElementById('gate-count').value = gateCount;
+      const label = [app.eventName,app.eventDate].filter(Boolean).join(' ');
+      document.getElementById('event-label').textContent = label||'大会未設定';
+      document.getElementById('sheet-name').value = sheetName;
+      gateVals = {1:{},2:{}};
+      msg.className='msg-ok'; msg.textContent='✓ 読み込みました！';
+      setTimeout(()=>{ closeLoadModal(); showTab('athletes'); },800);
+    } else { msg.className='msg-err'; msg.textContent='データが見つかりませんでした'; }
+  } catch(e) { msg.className='msg-err'; msg.textContent='通信エラーが発生しました'; }
+}
+
+async function testGAS() {
+  const url = document.getElementById('gas-url').value.trim();
+  const msg = document.getElementById('gas-msg');
+  if (!url) { msg.className='msg-err'; msg.textContent='URLを入力してください'; return; }
+  msg.className=''; msg.textContent='接続中...';
+  try {
+    const res = await fetch(url+'?action=test');
+    const data = await res.json();
+    if (data.status==='ok') { msg.className='msg-ok'; msg.textContent='接続成功！'; }
+    else { msg.className='msg-err'; msg.textContent='エラー: '+(data.message||'不明'); }
+  } catch(e) { msg.className='msg-err'; msg.textContent='接続できませんでした'; }
 }
 
 buildGateGrids();
