@@ -56,11 +56,11 @@ select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.o
 .run-label { font-size: 12px; font-weight: 700; color: var(--blue); margin-bottom: 10px; }
 .time-hint { font-size: 11px; color: var(--gray-500); margin-left: 4px; }
 .time-preview { font-size: 12px; color: var(--blue-light); margin-left: 4px; font-weight: 600; }
-.gate-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin: 8px 0; }
-.gate-cell { border: 1px solid var(--gray-300); border-radius: 6px; padding: 5px 3px; text-align: center; background: white; }
-.gate-num { font-size: 10px; color: var(--gray-500); margin-bottom: 3px; }
-.gate-btns { display: flex; gap: 2px; justify-content: center; }
-.gb { padding: 3px 4px; border: 1px solid var(--gray-300); border-radius: 4px; font-size: 11px; cursor: pointer; background: transparent; color: var(--gray-500); min-width: 24px; font-family: inherit; font-weight: 600; }
+.gate-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 8px 0; }
+.gate-cell { border: 1px solid var(--gray-300); border-radius: 8px; padding: 6px 3px; text-align: center; background: white; }
+.gate-num { font-size: 11px; color: var(--gray-500); margin-bottom: 4px; font-weight: 600; }
+.gate-btns { display: flex; gap: 3px; justify-content: center; }
+.gb { padding: 6px 4px; border: 1px solid var(--gray-300); border-radius: 4px; font-size: 12px; cursor: pointer; background: transparent; color: var(--gray-500); min-width: 28px; min-height: 32px; font-family: inherit; font-weight: 700; touch-action: manipulation; }
 .gb.sel-0 { background: var(--gray-100); color: var(--gray-700); border-color: var(--gray-400); }
 .gb.sel-2 { background: var(--yellow-light); color: var(--yellow); border-color: #f0ad4e; }
 .gb.sel-50 { background: var(--red-light); color: var(--red); border-color: #e74c3c; }
@@ -202,19 +202,19 @@ tr:nth-child(even) td { background: var(--gray-50); }
   <div class="card">
     <div class="form-row">
       <span class="form-label">選手</span>
-      <select id="sel-ath" onchange="loadExisting()" style="flex:1;min-width:160px"></select>
+      <select id="sel-ath" onchange="loadExisting()" style="flex:1;min-width:160px;font-size:15px;padding:10px"></select>
     </div>
     <hr class="divider">
     <div class="run-block">
       <div class="run-label">第1ラン</div>
       <div class="form-row">
         <span class="form-label">スタート</span>
-        <input type="text" id="r1-start" placeholder="0:00.00" style="width:85px" oninput="previewNet(1)" />
+        <input type="text" id="r1-start" placeholder="0:00.00" style="width:110px;font-size:16px" oninput="previewNet(1)" />
         <span class="time-hint">分:秒.ミリ</span>
       </div>
       <div class="form-row">
         <span class="form-label">ゴール</span>
-        <input type="text" id="r1-goal" placeholder="1:45.32" style="width:85px" oninput="previewNet(1)" />
+        <input type="text" id="r1-goal" placeholder="1:45.32" style="width:110px;font-size:16px" oninput="previewNet(1)" />
         <span class="time-preview" id="r1-net"></span>
       </div>
       <div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;font-weight:600">ゲートペナルティ</div>
@@ -225,7 +225,7 @@ tr:nth-child(even) td { background: var(--gray-50); }
         <div class="pen-box-detail" id="r1-pen-detail">クリーン</div>
       </div>
       <div class="form-row" style="margin-top:10px">
-        <span class="form-label" style="font-weight:700;color:var(--gray-800)">合計タイム</span>
+        <span class="form-label" style="font-weight:700;color:var(--gray-800)">ポイント</span>
         <span class="total-time" id="r1-total">—</span>
       </div>
     </div>
@@ -233,12 +233,12 @@ tr:nth-child(even) td { background: var(--gray-50); }
       <div class="run-label">第2ラン</div>
       <div class="form-row">
         <span class="form-label">スタート</span>
-        <input type="text" id="r2-start" placeholder="0:00.00" style="width:85px" oninput="previewNet(2)" />
+        <input type="text" id="r2-start" placeholder="0:00.00" style="width:110px;font-size:16px" oninput="previewNet(2)" />
         <span class="time-hint">分:秒.ミリ</span>
       </div>
       <div class="form-row">
         <span class="form-label">ゴール</span>
-        <input type="text" id="r2-goal" placeholder="1:42.10" style="width:85px" oninput="previewNet(2)" />
+        <input type="text" id="r2-goal" placeholder="1:42.10" style="width:110px;font-size:16px" oninput="previewNet(2)" />
         <span class="time-preview" id="r2-net"></span>
       </div>
       <div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;font-weight:600">ゲートペナルティ</div>
@@ -249,7 +249,7 @@ tr:nth-child(even) td { background: var(--gray-50); }
         <div class="pen-box-detail" id="r2-pen-detail">クリーン</div>
       </div>
       <div class="form-row" style="margin-top:10px">
-        <span class="form-label" style="font-weight:700;color:var(--gray-800)">合計タイム</span>
+        <span class="form-label" style="font-weight:700;color:var(--gray-800)">ポイント</span>
         <span class="total-time" id="r2-total">—</span>
       </div>
     </div>
@@ -420,7 +420,8 @@ function previewNet(run) {
   const netEl = document.getElementById('r'+run+'-net'), totEl = document.getElementById('r'+run+'-total');
   if (s!==null&&g!==null&&g>s) {
     netEl.textContent = '（差分: '+fmtSec(g-s)+'）';
-    totEl.textContent = fmtSec(g-s+pen); totEl.style.color = 'var(--blue)';
+    const totalSec = g-s+pen;
+    totEl.textContent = fmtSec(totalSec) + '　' + totalSec.toFixed(2) + 'pt'; totEl.style.color = 'var(--blue)';
   } else if (s!==null&&g!==null) {
     netEl.textContent=''; totEl.textContent='ゴール > スタートにしてください'; totEl.style.color='var(--red)';
   } else { netEl.textContent=''; totEl.textContent='—'; totEl.style.color='var(--blue)'; }
