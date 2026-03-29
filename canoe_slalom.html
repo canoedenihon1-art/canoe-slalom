@@ -122,11 +122,13 @@ tr:nth-child(even) td { background: var(--gray-50); }
     <div class="app-event" id="event-label">大会未設定</div>
   </div>
   <div class="header-btns">
-    <button class="sync-btn" onclick="openLoadModal()">📂 読み込み</button>
-    <button class="sync-btn" onclick="openSyncModal()">💾 保存</button>
+    <button class="sync-btn" onclick="pushSync()" id="push-btn">📤 同期</button>
+    <button class="sync-btn" onclick="pullSync()" id="pull-btn">📥 更新</button>
+    <button class="sync-btn" onclick="openLoadModal()">📂 大会選択</button>
   </div>
 </div>
 
+<div id="sync-bar" style="display:none;background:#1e8449;color:white;font-size:11px;padding:4px 16px;text-align:center"></div>
 <div class="tab-bar">
   <div class="tab-item active" onclick="showTab('settings')">大会設定</div>
   <div class="tab-item" onclick="showTab('athletes')">選手登録</div>
@@ -586,24 +588,115 @@ function renderFinal() {
   cats.forEach(cat=>{
     const data=allData.filter(a=>a.cat===cat&&a.best!==null).sort((a,b)=>a.best-b.best);
     if(!data.length) return;
+    const catBest=data[0].best;
     html+=`<div class="cat-block"><div class="cat-title">${cat}</div>
       <div class="tbl-wrap"><table>
-        <thead><tr><th>順位</th><th class="left">名前</th><th>ペナ合計</th><th>タイム</th><th>ポイント</th></tr></thead>
-        <tbody>`;
+        <thead><tr>
+          <th>Rank</th><th>Bib</th><th class="left">Name</th>
+          <th>Time</th><th>Penalty</th><th>Total Time</th><th>Behind</th>
+        </tr></thead><tbody>`;
     data.forEach((a,i)=>{
       const bestRun=a.r1&&a.r2?(a.r1.total<=a.r2.total?a.r1:a.r2):a.r1||a.r2;
       const pen=bestRun?bestRun.pen:0;
+      const netTime=bestRun?bestRun.net:0;
+      const behind=a.best-catBest;
+      const penStyle=pen>=50?'color:var(--red);font-weight:700':pen>0?'color:var(--yellow);font-weight:700':'color:var(--gray-400)';
       html+=`<tr>
-        <td>${medal[i]||i+1}</td>
+        <td style="font-weight:700">${medal[i]||i+1}</td>
+        <td style="color:var(--gray-500)">${a.startOrder}</td>
         <td class="left">${a.name}</td>
-        <td>${pen>0?`<span class="badge ${pen>=50?'badge-mg':'badge-pen'}">${pen}秒</span>`:'<span class="badge badge-clean">0秒</span>'}</td>
+        <td>${fmtSec(netTime)}</td>
+        <td style="${penStyle}">${pen}</td>
         <td style="font-weight:700">${fmtSec(a.best)}</td>
-        <td style="font-weight:700">${a.best.toFixed(2)}pt</td>
+        <td style="color:var(--gray-500)">${behind<0.01?'—':'+'+behind.toFixed(2)}</td>
       </tr>`;
     });
     html+=`</tbody></table></div></div>`;
   });
   document.getElementById('final-table').innerHTML=html||'<div class="empty">データがありません</div>';
+}
+
+// ---- 同期バー ----
+function showSyncBar(msg, color) {
+  const bar = document.getElementById('sync-bar');
+  bar.style.display = 'block';
+  bar.style.background = color || '#1e8449';
+  bar.textContent = msg;
+  if (color !== '#c0392b') setTimeout(() => { bar.style.display = 'none'; }, 3000);
+}
+
+// ---- 現在の大会名を取得 ----
+function getCurrentSheetName() {
+  const name = document.getElementById('sheet-name').value.trim();
+  if (!name) {
+    const eventName = document.getElementById('event-name').value.trim();
+    const eventDate = document.getElementById('event-date').value;
+    return [eventDate, eventName].filter(Boolean).join(' ') || null;
+  }
+  return name;
+}
+
+// ---- 📤 同期（push）----
+async function pushSync() {
+  const url = document.getElementById('gas-url').value.trim();
+  if (!url) { showSyncBar('設定タブでGAS URLを入力してください', '#c0392b'); return; }
+  const sheetName = getCurrentSheetName();
+  if (!sheetName) { showSyncBar('大会設定タブで大会名または日付を入力してください', '#c0392b'); return; }
+  document.getElementById('push-btn').textContent = '⏳ 同期中...';
+  const eventName = document.getElementById('event-name').value.trim();
+  const eventDate = document.getElementById('event-date').value;
+  const gNums = Array.from({length:gateCount},(_,i)=>i+1);
+  const rows = [];
+  const sorted = [...athletes].sort((a,b)=>a.startOrder-b.startOrder);
+  sorted.forEach(a=>{
+    [1,2].forEach(run=>{
+      const r=times[a.id]?.[run];
+      const row={発艇順:a.startOrder,名前:a.name,カテゴリ:a.cat,ラン:run,
+        スタート:r?r.startRaw:'',ゴール:r?r.goalRaw:'',差分:r?fmtSec(r.net):'',
+        ペナルティ合計:r?r.pen:'',タイム:r?fmtSec(r.total):'',ポイント:r?r.total.toFixed(2):''};
+      gNums.forEach(g=>{row['G'+g]=r?(r.gates?.[g]||0):'';});
+      rows.push(row);
+    });
+  });
+  const appData = {eventName,eventDate,gateCount,athletes,times};
+  const payload = {action:'sync',sheetName,eventName,eventDate,gateCount,rows,appData};
+  try {
+    const res = await fetch(url,{method:'POST',body:JSON.stringify(payload),headers:{'Content-Type':'text/plain'}});
+    const data = await res.json();
+    if (data.status==='ok') {
+      document.getElementById('sheet-name').value = sheetName;
+      showSyncBar('✓ 同期しました（' + new Date().toLocaleTimeString() + '）');
+    } else { showSyncBar('エラー: '+(data.message||'不明'), '#c0392b'); }
+  } catch(e) { showSyncBar('通信エラーが発生しました', '#c0392b'); }
+  document.getElementById('push-btn').textContent = '📤 同期';
+}
+
+// ---- 📥 更新（pull）----
+async function pullSync() {
+  const url = document.getElementById('gas-url').value.trim();
+  if (!url) { showSyncBar('設定タブでGAS URLを入力してください', '#c0392b'); return; }
+  const sheetName = getCurrentSheetName();
+  if (!sheetName) { showSyncBar('大会設定タブで大会名または日付を入力してください', '#c0392b'); return; }
+  document.getElementById('pull-btn').textContent = '⏳ 更新中...';
+  try {
+    const res = await fetch(`${url}?action=load&sheet=${encodeURIComponent(sheetName)}`);
+    const data = await res.json();
+    if (data.status==='ok' && data.appData) {
+      const app = JSON.parse(data.appData);
+      athletes = app.athletes||[];
+      times = app.times||{};
+      gateCount = app.gateCount||20;
+      document.getElementById('event-name').value = app.eventName||'';
+      document.getElementById('event-date').value = app.eventDate||'';
+      document.getElementById('gate-count').value = gateCount;
+      const label = [app.eventName,app.eventDate].filter(Boolean).join(' ');
+      document.getElementById('event-label').textContent = label||'大会未設定';
+      gateVals = {1:{},2:{}};
+      showSyncBar('✓ 更新しました（' + new Date().toLocaleTimeString() + '）');
+      renderAthList(); renderFinal();
+    } else { showSyncBar('データが見つかりません。先に📤同期してください', '#c0392b'); }
+  } catch(e) { showSyncBar('通信エラーが発生しました', '#c0392b'); }
+  document.getElementById('pull-btn').textContent = '📥 更新';
 }
 
 // ---- 保存 ----
